@@ -14,7 +14,7 @@ serial:
   dsrdtr: False              # (False) enable hardware (DSR/DTR) flow control
   interCharTimeout:          # () 
 
-prefix: ''                   # ()
-terminator: '\r'             # character to tell controller to run buffer contents
+prefix: ""
+terminator: "\r"             # character to tell controller to run buffer contents
 
 conv: 10000                  # (10000) number of stage units per mm (eg 10000 ASI units = 1 mm)

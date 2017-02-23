@@ -2,20 +2,20 @@
 # See this link for more details:
 # http://pyserial.readthedocs.io/en/latest/pyserial_api.html
 serial: 
-  port: COM9                 # () com port
-  baudrate: 9600             # (9600) baud rate
-  bytesize: 8                # (8) number of data bits
-  parity: N                  # (N) enable parity checking
-  stopbits: 1                # (1) number of stopbits
-  timeout:                   # () read timeout value
-  xonxoff: False             # (False) enable software flow control
-  rtscts: False              # (False) enable hardware (RTS/CTS) flow control
-  writeTimeout:              # () write timeout value
-  dsrdtr: False              # (False) enable hardware (DSR/DTR) flow control
-  interCharTimeout:          # () 
+  port: COM9                   # () com port
+  baudrate: 9600               # (9600) baud rate
+  # bytesize: 8                # (8) number of data bits
+  # parity: N                  # (N) enable parity checking
+  # stopbits: 1                # (1) number of stopbits
+  # timeout:                   # () read timeout value
+  # xonxoff: False             # (False) enable software flow control
+  # rtscts: False              # (False) enable hardware (RTS/CTS) flow control
+  # writeTimeout:              # () write timeout value
+  # dsrdtr: False              # (False) enable hardware (DSR/DTR) flow control
+  # interCharTimeout:          # () 
 
-prefix: '/1'
-terminator: '\r'             # character to tell controller to run buffer contents
+prefix: /1
+terminator: "\r"             # character to tell controller to run buffer contents
 
 conv: 20153.164046           # usteps/mm (2e6 usteps = 99.24 mm)
 velocity_default: 1525320    # usteps/sec (75.6863784 mm/sec)
