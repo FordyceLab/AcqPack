@@ -2,7 +2,7 @@
 # See this link for more details:
 # http://pyserial.readthedocs.io/en/latest/pyserial_api.html
 serial: 
-  port: COM8                 # () com port
+  port: COM7                 # () com port
   baudrate: 115200           # (115200) baud rate
   bytesize: 8                # (8) number of data bits
   parity: N                  # (N) enable parity checking
