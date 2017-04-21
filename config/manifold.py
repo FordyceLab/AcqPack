@@ -1,4 +1,4 @@
-from utils import *
+import utils as ut
 from pymodbus.client.sync import ModbusTcpClient
 
 class Manifold:
@@ -45,7 +45,7 @@ class Manifold:
         return self.client.read_coils(register_num, 1).bits[0]
     
     def load_valvemap(self, valvemap_path):
-        self.valvemap = read_delim_pd(valvemap_path)
+        self.valvemap = ut.read_delim_pd(valvemap_path)
     
     def exit(self):
         self.client.close()

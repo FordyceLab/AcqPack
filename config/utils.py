@@ -29,3 +29,31 @@ def read_delim_pd(filepath):
 def lookup(table, columns, values):
     temp_df = pd.DataFrame(data=[values], columns = columns, copy=False)
     return table.merge(temp_df, copy=False)
+
+# I:
+    # num_rc: (ct, ct) <tuple>
+    # space_rc: (mm, mm) <tuple>
+# O: 
+    # position_table <pandas dataframe>
+def generate_platemap(num_rc, space_rc, z, to_clipboard=False):
+    temp = list()
+    headers = ['n','s','r','c','name','x','y','z']
+    
+    for r in range(num_rc[0]):
+        for c in range(num_rc[1]):
+            n = c + (r)*num_rc[1]
+            s = ((r+1)%2)*(c + r*num_rc[1]) + (r%2)*((r+1)*num_rc[1] - (c+1))
+            name = chr(64+r+1) + '{:02d}'.format(c+1)
+            x = c*space_rc[1]
+            y = r*space_rc[0]
+            z = z
+            temp.append([n, s, r, c, name, x, y, z])
+    position_table = pd.DataFrame(temp, columns=headers)
+    if to_clipboard:
+        position_table.to_clipboard()
+    return position_table
+
+def spacing(num_rc,p1,p2):
+    r,c =map(float,num_rc)
+    return tuple(abs(np.nan_to_num(np.subtract(p2,p1)/(c-1,r-1))))
+

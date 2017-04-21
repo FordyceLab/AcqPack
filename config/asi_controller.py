@@ -17,7 +17,7 @@ class ASI_Controller:
 
         print "Initializing stage..."
         self.move_xy(2000, -2000)  # move to switch limits (bottom right)
-        self.r_xy(-0.5, 0.5)  # move from switch limits 0.5 mm
+        self.r_xy(-0.2, 0.2)  # move from switch limits 0.2 mm
 
 
     def cmd(self, cmd_string):
