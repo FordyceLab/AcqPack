@@ -2,7 +2,7 @@ import utils as ut
 from pymodbus.client.sync import ModbusTcpClient
 
 class Manifold:
-    def __init__(self, ip_address, valvemap_path, read_offset=0):
+    def __init__(self, ip_address, valvemap_path, read_offset=512):
         self.client = ModbusTcpClient(ip_address)
         self.read_offset = read_offset
         self.load_valvemap(valvemap_path)
