@@ -11,6 +11,8 @@ class Motor:
         self.config = yaml.load(f)
         f.close()
         
+        self.config['conv'] = float(self.config['conv'])
+
         if init:
             self.initialize()
 
@@ -92,8 +94,13 @@ class Motor:
     
     def where(self):
         cmd_string = '?0'
-        ustep = self.cmd(cmd_string)
-        retrun float(ustep)/self.config['conv']
+        response = str(self.cmd(cmd_string))
+        strt = response.rfind('`') + 1
+        for end, c in enumerate(response[strt:]):
+            if c not in str(range(0,11)):
+                break
+        ustep = response[strt:strt+end]
+        return round(float(ustep)/self.config['conv'], 4), # tuple
     
     def exit(self):
         self.serial.close()

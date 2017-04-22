@@ -35,7 +35,7 @@ def lookup(table, columns, values):
     # space_rc: (mm, mm) <tuple>
 # O: 
     # position_table <pandas dataframe>
-def generate_platemap(num_rc, space_rc, z, to_clipboard=False):
+def generate_position_table(num_rc, space_rc, z, to_clipboard=False):
     temp = list()
     headers = ['n','s','r','c','name','x','y','z']
     
@@ -44,13 +44,13 @@ def generate_platemap(num_rc, space_rc, z, to_clipboard=False):
             n = c + (r)*num_rc[1]
             s = ((r+1)%2)*(c + r*num_rc[1]) + (r%2)*((r+1)*num_rc[1] - (c+1))
             name = chr(64+r+1) + '{:02d}'.format(c+1)
-            x = c*space_rc[1]
-            y = r*space_rc[0]
-            z = z
+            x = float(c*space_rc[1])
+            y = float(r*space_rc[0])
+            z = float(z)
             temp.append([n, s, r, c, name, x, y, z])
     position_table = pd.DataFrame(temp, columns=headers)
     if to_clipboard:
-        position_table.to_clipboard()
+        position_table.to_clipboard(index=False)
     return position_table
 
 def spacing(num_rc,p1,p2):

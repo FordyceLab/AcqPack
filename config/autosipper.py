@@ -10,10 +10,10 @@ class Autosipper:
         self.coord_frames = pd.DataFrame(index=['transform','position_table'])
         self.add_coord_frame('hardware')
         # TODO: load in deck transform
-        deck_transform = np.array([-1,0,0],
-                                [0,1,0],
-                                [0,0,-1],
-                                [0,0,0])
+        deck_transform = np.array([[-1,0,0],
+                                    [0,1,0],
+                                    [0,0,-1],
+                                    [0,0,93]])
         self.add_coord_frame('deck', deck_transform)
 
         # TODO: option to add plates here
@@ -77,11 +77,11 @@ class Autosipper:
 
 
     def go_to(self, frame, lookup_columns, lookup_values, zh_travel = 0):
-        transform, position_table = self.coord_frames['frame']
+        transform, position_table = self.coord_frames[frame]
 
         # lookup values in columns, return corresponding hardware X, Y, Z
         # if no columns specified, transform provided XYZ to hardware coordinates
-        xyz = np.array(ut.lookup(position_table, lookup_coumns, lookup_values)[['x','y','z']])[0]
+        xyz = tuple(ut.lookup(position_table, lookup_columns, lookup_values)[['x','y','z']].iloc[0])
         xyzw = xyz + (1,) # concatenate for translation
         xh, yh, zh = np.dot(xyzw, transform) # get hardware coordinates
 
@@ -91,7 +91,7 @@ class Autosipper:
         else:
             self.Z.home()
 
-        self.XY.move(xh, yh) # make XY movement (blocking)
+        self.XY.move_xy(xh, yh) # make XY movement (blocking)
         self.Z.move(zh)      # make Z movement (blocking)
     
 

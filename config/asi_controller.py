@@ -1,3 +1,7 @@
+import serial as s
+import time
+import yaml
+
 class ASI_Controller:
     def __init__(self, config_file, init=True):
         self.serial = s.Serial() # placeholder
@@ -6,6 +10,8 @@ class ASI_Controller:
         self.config = yaml.load(f)
         f.close()
         
+        self.config['conv'] = float(self.config['conv'])
+
         if init:
             self.initialize()
 
@@ -51,11 +57,12 @@ class ASI_Controller:
         self.cmd_xy('HALT', False)
     
     def where_xy(self):
+        conv = self.config['conv']
         response = self.cmd_xy('WHERE X Y')
         if response.find('A'):
             pos_xy = response.split()[1:3]
-            pos_x = float(pos_xy[0])
-            pos_y = float(pos_xy[1])
+            pos_x = round(float(pos_xy[0])/conv, 4)
+            pos_y = round(float(pos_xy[1])/conv, 4)
             return pos_x, pos_y
         else:
             return None, None 
