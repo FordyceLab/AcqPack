@@ -65,7 +65,7 @@ class ASI_Controller:
             pos_y = round(float(pos_xy[1])/conv, 4)
             return pos_x, pos_y
         else:
-            return None, None 
+            return None, None
 
     def move_xy(self, x_mm, y_mm):
         conv = self.config['conv']
