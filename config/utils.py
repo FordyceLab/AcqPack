@@ -1,5 +1,6 @@
 import pandas as pd
 import csv
+import json
 
 # I: filepath of delimited file
 # P: detect delimiter/header read file accordingly
@@ -26,9 +27,25 @@ def read_delim_pd(filepath):
     f.seek(0)
     return pd.read_csv(f, header=has_header, sep=None, engine='python')
 
-def lookup(table, columns, values):
-    temp_df = pd.DataFrame(data=[values], columns = columns, copy=False)
-    return table.merge(temp_df, copy=False)
+# looks up records where lookup_cols == lookup_vals
+# optionally returns only specified output_cols and/or specified output_recs
+def lookup(table, lookup_cols, lookup_vals, output_cols=None, output_recs=None):
+    if type(lookup_cols)==str:
+        lookup_cols = [lookup_cols] 
+    
+    lookup_vals = [lookup_vals]
+    temp_df = pd.DataFrame(data=lookup_vals, columns=lookup_cols, copy=False)
+    output = table.merge(temp_df, copy=False)
+    
+    if output_cols is not None:
+        if type(output_cols)==str:
+            output_cols = [output_cols]
+        output = output[output_cols]
+    
+    if output_recs is not None:
+        output = output.iloc[output_recs]
+        
+    return output
 
 # I:
     # num_rc: (ct, ct) <tuple>
@@ -57,3 +74,22 @@ def spacing(num_rc,p1,p2):
     r,c =map(float,num_rc)
     return tuple(abs(np.nan_to_num(np.subtract(p2,p1)/(c-1,r-1))))
 
+
+def load_mm_positionlist(filepath):
+    f = open(filepath)
+    data = json.load(f)
+    f.close()
+    
+    df1 = pd.io.json.json_normalize(data, ['POSITIONS'] ).drop(['DEFAULT_XY_STAGE','DEFAULT_Z_STAGE','DEVICES', 'PROPERTIES'],1)
+    df1 = df1[['GRID_ROW', 'GRID_COL', 'LABEL']]
+    df2 = pd.io.json.json_normalize(data, ['POSITIONS', 'DEVICES']).drop(['DEVICE', 'AXES', 'Z'], 1)
+    df = pd.concat([df1, df2], axis=1)
+    
+    rename = {}
+    rename['GRID_ROW'] = 'r'
+    rename['GRID_COL'] = 'c'
+    rename['LABEL'] = 'name'
+    rename['X'] = 'x'
+    rename['Y'] = 'y'
+    
+    return df.rename(columns=rename)
