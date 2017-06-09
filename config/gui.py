@@ -12,6 +12,7 @@ def snap(core, mode='mpl'):
         core.snapImage()
         img = core.getImage()
         plt.imshow(img,cmap='gray')
+        plt.show()
 
     def on_snap_cv2(b):
         cv2.destroyWindow('Snap')
@@ -159,7 +160,7 @@ def grid(core, loop_pause=0.15):
     
     c1 = widgets.Button(description='Corner 1') 
     c2 = widgets.Button(description='Corner 2')
-    = widgets.Text()
+    file = widgets.Text()
     save = widgets.Text()
     
     live.on_click(on_live)
@@ -180,9 +181,9 @@ def grid(core, loop_pause=0.15):
 def manifold_control(manifold):
     def on_clicked(b):
         if b.new == True:
-            manifold.pressurize(b.owner.valve)
-        elif b.new == False:
             manifold.depressurize(b.owner.valve)
+        elif b.new == False:
+            manifold.pressurize(b.owner.valve)
         else:
             pass
         
@@ -213,10 +214,10 @@ def manifold_control(manifold):
             widgets.VBox(button_list[i:i+8][::-1])
         )
 
-    sync_button = widgets.Button(icon='retweet', button_style='success', layout=widgets.Layout(width='40px'))
+    sync_button = widgets.Button(icon='fa-retweet', button_style='success', layout=widgets.Layout(width='40px'))
     sync_button.on_click(sync)
     display.display(widgets.HBox(bank_list + [sync_button] ))
-    display.display(widgets.Label('Dark = Pressurized', layout=widgets.Layout(width='300px')))
+    display.display(widgets.Label('Dark = De-Pressurized', layout=widgets.Layout(width='300px')))
         
 
 # --------------------------------------------------------------------  

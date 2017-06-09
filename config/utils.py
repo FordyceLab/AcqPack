@@ -1,6 +1,7 @@
 import pandas as pd
 import csv
 import json
+import numpy as np
 
 # I: filepath of delimited file
 # P: detect delimiter/header read file accordingly
