@@ -22,7 +22,7 @@ FractionCollector::
 	frames
 		transform
 		position_table
-		add_frame()
+	add_frame()
 	add_plate()
 	home()
 	goto()
