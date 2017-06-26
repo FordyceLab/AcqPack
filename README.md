@@ -2,7 +2,7 @@
 Code to perform acquisitions (experiment automation and hardware control).
 Should be combined with MMCorePy for microscope control.
 
--`config/` should be for computer scope settings
+-`config/` should be for computer scope settings   
 -`setup/` should be for experiment scope settings
 
 `from acqpack import ...`
