@@ -1,0 +1,4 @@
+*.pyc
+acqpack/*.ipynb_checkpoints
+*.DS_Store
+*.idea
