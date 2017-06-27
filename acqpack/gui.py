@@ -185,12 +185,14 @@ def grid(core, loop_pause=0.15):
 
 # --------------------------------------------------------------------
 # MANIFOLD -----------------------------------------------------------
-def manifold_control(manifold):
+def manifold_control(manifold, button_col='name'):
     def on_clicked(b):
-        if b.new:  # b.new == True
+        if b.new == True:  # keep this (b.new == True)
             manifold.depressurize(b.owner.valve)
-        else:  # b.new == False
+        elif b.new == False:  # keep this (b.new == False)
             manifold.pressurize(b.owner.valve)
+        else:
+        	pass
 
     def sync(b):
         for button in button_list:
@@ -198,15 +200,13 @@ def manifold_control(manifold):
 
     button_list = []
     for i in range(48):
-        style = 'info'
-        desc = '{} {}'.format(i, manifold.valvemap['name'][i])
-
+        desc = '{} . . . {}'.format(i, manifold.valvemap[button_col][i])
         button_list.append(
             widgets.ToggleButton(
                 valve=i,
                 description=desc,
                 value=manifold.read_valve(i),
-                button_style=style  # 'success', 'info', 'warning', 'danger' or ''
+                button_style=''  # 'success', 'info', 'warning', 'danger' or ''
             ))
 
     for button in button_list:
@@ -221,191 +221,14 @@ def manifold_control(manifold):
     sync_button = widgets.Button(icon='fa-retweet', button_style='success', layout=widgets.Layout(width='40px'))
     sync_button.on_click(sync)
     display.display(widgets.HBox(bank_list + [sync_button]))
-    display.display(widgets.Label('Dark = De-Pressurized', layout=widgets.Layout(width='300px')))
+    display.display(widgets.Label('Dark = De-Pressurized / Open', layout=widgets.Layout(width='300px')))
 
-
-# --------------------------------------------------------------------  
-# STAGE CONTROL ------------------------------------------------------
-def stage_control(xy, z):
-    # icons are from "font-awesome"
-    x_minus = widgets.Button(
-        description='',
-        disabled=False,
-        button_style='primary',
-        icon='fa-arrow-left',
-        width='50px')
-
-    def xminus(b):
-        xy.move_relative_xy(-xy_slider.value, 0)
-        display.clear_output()
-        print(xy.where_xy())
-
-    x_minus.on_click(xminus)
-
-    x_plus = widgets.Button(
-        description='',
-        disabled=False,
-        button_style='primary',
-        icon='fa-arrow-right',
-        width='50px')
-
-    def xplus(b):
-        xy.r_xy(xy_slider.value, 0)
-        display.clear_output()
-        print(xy.where_xy())
-
-    x_plus.on_click(xplus)
-
-    y_minus = widgets.Button(
-        description='',
-        disabled=False,
-        button_style='primary',
-        icon='fa-arrow-up',
-        width='50px')
-
-    def yminus(b):
-        xy.r_xy(0, -xy_slider.value)
-        display.clear_output()
-        print(xy.where_xy())
-
-    y_minus.on_click(yminus)
-
-    y_plus = widgets.Button(
-        description='',
-        disabled=False,
-        button_style='primary',
-        icon='fa-arrow-down',
-        width='50px')
-
-    def yplus(b):
-        xy.r_xy(0, xy_slider.value)
-        display.clear_output()
-        print(xy.where_xy())
-
-    y_plus.on_click(yplus)
-
-    xy_home = widgets.Button(
-        description='',
-        disabled=False,
-        button_style='primary',
-        icon='fa-home',
-        width='50px')
-
-    def xyhome(b):
-        z.home()
-        xy.goto_xy(0, 0)
-        display.clear_output()
-        print(xy.where_xy())
-
-    xy_home.on_click(xyhome)
-
-    xy_slider = widgets.FloatSlider(description='[mm]', min=.05, max=10, step=.05, orientation='vertical',
-                                    height='150px')
-
-    def xystep(change):
-        xy_step = change['new']
-
-    xy_slider.observe(xystep, names='value')
-
-    xy_cluster = widgets.HBox(
-        [xy_slider, widgets.VBox([widgets.HBox([x_minus, x_plus, xy_home]), widgets.HBox([y_minus, y_plus])])])
-
-    z_minus = widgets.Button(
-        description='',
-        disabled=False,
-        button_style='primary',
-        icon='fa-arrow-up')
-
-    def zminus(b):
-        z.move_relative(-z_slider.value)
-        display.clear_output()
-        print(z.where())
-
-    z_minus.on_click(zminus)
-
-    z_plus = widgets.Button(
-        description='',
-        disabled=False,
-        button_style='primary',
-        icon='fa-arrow-down')
-
-    def zplus(b):
-        z.move_relative(z_slider.value)
-        display.clear_output()
-        print(z.where())
-
-    z_plus.on_click(zplus)
-
-    z_home = widgets.Button(
-        description='',
-        disabled=False,
-        button_style='primary',
-        icon='fa-home',
-        width='50px')
-
-    def zhome(b):
-        z.home()
-        display.clear_output()
-        print(z.where())
-
-    z_home.on_click(zhome)
-
-    z_slider = widgets.FloatSlider(description='[mm]', min=.05, max=10, step=.05, orientation='vertical',
-                                   height='150px')
-
-    def zstep(change):
-        z_step = change['new']
-
-    z_slider.observe(zstep, names='value')
-
-    z_cluster = widgets.VBox([widgets.HBox([z_slider, widgets.VBox([z_minus, z_plus]), z_home])])
-
-    x_pos = widgets.Text(
-        value='0',
-        placeholder='Type something',
-        description='X:',
-        disabled=False,
-        width='150px')
-
-    def xpos(sender):
-        xcurr, ycurr = xy.where_xy()
-        xy.goto_xy(sender.value, ycurr)
-
-    x_pos.on_submit(xpos)
-
-    y_pos = widgets.Text(
-        value='0',
-        placeholder='Type something',
-        description='Y:',
-        disabled=False,
-        width='150px')
-
-    def ypos(sender):
-        xcurr, ycurr = xy.where_xy()
-        xy.goto_xy(xcurr, sender.value)
-
-    y_pos.on_submit(ypos)
-
-    z_pos = widgets.Text(
-        value='0',
-        placeholder='Type something',
-        description='z:',
-        disabled=False,
-        width='150px')
-
-    def zpos(sender):
-        z.goto(float(sender.value))
-
-    z_pos.on_submit(zpos)
-
-    line = widgets.Label(value="$---------------------------------------$", disabled=False)
-
-    return widgets.VBox([widgets.HBox([x_pos, y_pos, z_pos]), line, widgets.HBox([xy_cluster, z_cluster])])
-
-
+    
 # --------------------------------------------------------------------
-# STAGE CONTROL2------------------------------------------------------
-def stage_control2(xy, z):
+# STAGE CONTROL-------------------------------------------------------
+def stage_control(autosampler):
+    xy = autosampler.XY
+    z = autosampler.Z
     # icons are from "font-awesome"
 
     # xy ------------------------------------------------------------
@@ -464,6 +287,7 @@ def stage_control2(xy, z):
         icon='fa-arrow-down')
 
     z_home = widgets.Button(
+        ax='z',
         button_style='primary',
         icon='fa-home',
         width='50px')
@@ -479,31 +303,34 @@ def stage_control2(xy, z):
 
     # type to move ------------------------------------------------------------
     x_pos = widgets.Text(
+        ax='x',
         value='0',
         placeholder='enter pos',
         description='X:',
         width='150px')
 
     y_pos = widgets.Text(
+        ax='y',
         value='0',
         placeholder='enter pos',
         description='Y:',
         width='150px')
 
     z_pos = widgets.Text(
+        ax='z',
         value='0',
         placeholder='enter pos',
-        description='z:',
+        description='Z:',
         width='150px')
 
     # functions ------------------------------------------------------------
     def move(b):
-        if b.owner.ax == 'x':
-            xy.move_relative_xy(b.owner.sign * xy_slider.value, 0)
-        elif b.owner.ax == 'y':
-            xy.move_relative_xy(0, b.owner.sign * xy_slider.value)
-        elif b.owner.ax == 'z':
-            z.move_relative(b.owner.sign * z_slider.value)
+        if b.ax == 'x':
+            xy.move_relative_xy(b.sign * xy_slider.value, 0)
+        elif b.ax == 'y':
+            xy.move_relative_xy(0, b.sign * xy_slider.value)
+        elif b.ax == 'z':
+            z.move_relative(b.sign * z_slider.value)
 
         display.clear_output()
         print(xy.where_xy() + z.where())
@@ -512,10 +339,10 @@ def stage_control2(xy, z):
         button.on_click(move)
 
     def home(b):
-        if b.owner.ax == 'xy':
+        if b.ax == 'xy':
             z.home()
-            xy.home()
-        elif b.owner.ax == 'z':
+            xy.home_xy()
+        elif b.ax == 'z':
             z.home()
 
         display.clear_output()
@@ -525,13 +352,13 @@ def stage_control2(xy, z):
         button.on_click(home)
 
     def pos(b):
-        if b.owner.ax == 'x':
+        if b.ax == 'x':
             x_curr, y_curr = xy.where_xy()
             xy.goto_xy(b.value, y_curr)
-        if b.owner.ax == 'y':
+        if b.ax == 'y':
             x_curr, y_curr = xy.where_xy()
             xy.goto_xy(x_curr, b.value)
-        elif b.owner.ax == 'z':
+        elif b.ax == 'z':
             z.goto(float(b.value))
 
         display.clear_output()
@@ -539,7 +366,7 @@ def stage_control2(xy, z):
 
     for button in [x_pos, y_pos, z_pos]:
         button.on_submit(pos)
-
+        
     # def step(change):
     #     xy_step = change['new']
 
@@ -547,5 +374,6 @@ def stage_control2(xy, z):
     #     slider.observe(step, names='value')
 
     line = widgets.Label(value="$---------------------------------------$")
+    print(xy.where_xy() + z.where())
 
     return widgets.VBox([widgets.HBox([x_pos, y_pos, z_pos]), line, widgets.HBox([xy_cluster, z_cluster])])

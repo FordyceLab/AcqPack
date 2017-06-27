@@ -33,7 +33,7 @@ class AsiController:
         1) Open serial connection
         2) Enable XY and Z motor control (one-time command)
         3) Move to XY stage stops (hall-effect)
-        4) Move from switch limits 0.1 mm
+        4) Move from switch limits 0.2 mm
         5) Zero stage
         """
         self.serial = s.Serial(**self.config['serial'])  # open serial connection
@@ -44,8 +44,8 @@ class AsiController:
         print "Initializing stage..."
         # TODO: should homing / initialization this be responsibility of the autosipper?
         # TODO: Implement zeroing commands?
-        self.goto_xy(2000, -2000)  # move to switch limits (bottom right)
-        self.move_relative_xy(-0.1, 0.1)  # move from switch limits 0.1 mm
+        self.goto_xy(1000, -1000)  # move to switch limits (bottom right)
+        self.move_relative_xy(-0.2, 0.2)  # move from switch limits 0.2 mm
         self.cmd_xy('HERE x y')  # establish current XY position as 0,0 (zero)
 
     def cmd(self, cmd_string):
@@ -118,10 +118,9 @@ class AsiController:
 
     def home_xy(self):
         """
-        If home-position has been defined by a previous HERE or ZERO command, moves to home position.
-        Else, moves to stage limits.
+        Moves XY-axes to 0,0.
         """
-        return self.cmd_xy('HOME X Y')
+        return self.goto_xy(0, 0)
     
     def where_xy(self):
         """
@@ -201,10 +200,9 @@ class AsiController:
 
     def home_z(self):
         """
-        If home-position has been defined by a previous HERE or ZERO command, moves to home position.
-        Else, moves to stage limit.
+        Moves Z-axis to 0.
         """
-        return self.cmd_z('HOME Z')
+        return self.goto_z(0)
         
     def where_z(self):
         """
