@@ -14,7 +14,7 @@ pytest-runner==2.11.1
 numpy == 1.13.0
 pandas == 0.20.2
 matplotlib == 2.0.2
-jupyter = 1.0.0
+jupyter == 1.0.0
 ipywidgets == 7.0.0a8
 
 opencv-contrib-python == 3.2.0.7
