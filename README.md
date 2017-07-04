@@ -1,5 +1,6 @@
 # AcqPack
-[![Build Status](https://travis-ci.org/FordyceLab/AcqPack.svg?branch=master)](https://travis-ci.org/FordyceLab/AcqPack)
+[![doc-status](https://img.shields.io/badge/docs-latest-red.svg?style=flat)](http://acqpack.readthedocs.io/en/latest/?badge=latest)   
+[![linux-status](https://travis-ci.org/FordyceLab/AcqPack.svg?branch=master)](https://travis-ci.org/FordyceLab/AcqPack) Linux
 
 Code to perform acquisitions (experiment automation and hardware control).
 Should be combined with MMCorePy for microscope control.
