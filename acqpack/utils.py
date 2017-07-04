@@ -111,9 +111,8 @@ def load_mm_positionlist(filepath):
     :param filepath: (str)
     :return: (DataFrame) position list with headers = "r, c, name, x, y"
     """
-    f = open(filepath)
-    data = json.load(f)
-    f.close()
+    with open(filepath) as f:
+        data = json.load(f)
 
     df1 = pd.io.json.json_normalize(data, ['POSITIONS']).drop(
         ['DEFAULT_XY_STAGE', 'DEFAULT_Z_STAGE', 'DEVICES', 'PROPERTIES'], 1)
@@ -140,22 +139,27 @@ def generate_grid(c0, c1, l_img, p):
     :param p: (float) desired percent overlap
     :return: (DataFrame) position_list in the same format as load_mm_positionlist
     """
-    n = np.ceil(np.abs(c1 - c0) / (l_img * (1 - p)) - p / (1 - p))  # ct,ct
-    l_acq = l_img * (n - np + p)  # um,um
+    # TODO: does generate_grid subsume generate_position_table?
+    # n -> number of stage positions on an axis
+    n = 1 + np.ceil(np.abs(c1 - c0) / ((1 - p) * l_img))  # ct,ct
+    n = n.astype('int')
+
+    # l_acq = total_movement + l_img
+    # l_acq = l_img * (n - n*p + p)  # um,um
     sign = np.sign(c1 - c0)
-    # cf = c0 + sign * l_acq  # um,um
 
     # could also use cartesian product (itertools.product OR np.mgrid, stack)
     # https://stackoverflow.com/questions/1208118/using-numpy-to-build-an-array-of-all-combinations-of-two-arrays
-    position_list = pd.DataFrame(columns=['r', 'c', 'name', 'x', 'y'])
-    for j in range(n[1]):
+    position_list = pd.DataFrame(columns=['r', 'c', 'name', 'x', 'y'], )
+    for j in xrange(n[1]):  # iter y
         y = sign[1] * j * l_img * (1 - p) + c0[1]
-        for i in range(n[0]):
+        for i in xrange(n[0]) if not (j % 2) else reversed(xrange(n[0])):  # iter x (serp)
             x = sign[0] * i * l_img * (1 - p) + c0[0]
 
             r = j
             c = i
             name = '1-Pos_{:03}_{:03}'.format(c, r)
-            position_list.append([r, c, name, x, y])
+            position_list.loc[len(position_list)] = [r, c, name, x, y]
 
+    position_list[['r', 'c']] = position_list[['r', 'c']].astype(int)
     return position_list

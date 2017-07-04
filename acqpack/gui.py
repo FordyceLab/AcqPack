@@ -130,6 +130,9 @@ def video(core, loop_pause=0.15):
 # --------------------------------------------------------------------  
 # GRID ------------------------------------------------------
 def grid(core, loop_pause=0.15):
+    # video
+
+
     # video with button (CV2)
 
     def on_live(b):
