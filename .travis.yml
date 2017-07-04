@@ -2,7 +2,7 @@
 deploy:
   true:
     python: 2.7
-    repo: slongwell/acqpack
+    repo: fordycelab/acqpack
     tags: true
   distributions: sdist bdist_wheel
   password:
