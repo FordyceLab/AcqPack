@@ -5,9 +5,7 @@
 
 import pytest
 
-
-from acqpack import acqpack
-
+from acqpack import Motor, AsiController, Autosampler, FractionCollector
 
 @pytest.fixture
 def response():

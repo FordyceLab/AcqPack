@@ -16,7 +16,6 @@ requirements = [
     'numpy',
     'pandas',
     'matplotlib',
-    'jupyter',
     'ipywidgets',
     'opencv-python',
     'opencv-contrib-python',
