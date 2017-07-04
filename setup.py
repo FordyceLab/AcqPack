@@ -11,7 +11,7 @@ with open('README.md') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [
+install_requirements = [
     # TODO: put package requirements here
     'numpy',
     'pandas',
@@ -43,7 +43,7 @@ setup(
     url='https://github.com/slongwell/acqpack',
     packages=find_packages(include=['acqpack']),
     include_package_data=True,
-    install_requires=requirements,
+    install_requires=install_requirements,
     license="MIT license",
     zip_safe=False,
     keywords='acqpack',
