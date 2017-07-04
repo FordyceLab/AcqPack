@@ -1,5 +1,5 @@
 # AcqPack
-[![doc-status](https://readthedocs.org/projects/acqpack/badge/?version=latest)](http://acqpack.readthedocs.io/en/latest/?badge=latest)
+[![doc-status](https://readthedocs.org/projects/acqpack/badge/?version=latest)](http://acqpack.readthedocs.io/en/latest/?badge=latest)   
 [![linux-status](https://travis-ci.org/FordyceLab/AcqPack.svg?branch=master)](https://travis-ci.org/FordyceLab/AcqPack) Linux
 
 Code to perform acquisitions (experiment automation and hardware control).
