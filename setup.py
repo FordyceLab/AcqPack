@@ -13,6 +13,15 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     # TODO: put package requirements here
+    'numpy',
+    'pandas',
+    'matplotlib',
+    'jupyter',
+    'ipywidgets',
+    'opencv-python',
+    'opencv-contrib-python',
+    'pymodbus',
+    'pyserial'
 ]
 
 setup_requirements = [
