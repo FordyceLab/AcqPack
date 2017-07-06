@@ -1,0 +1,6 @@
+=====
+Modules
+=====
+
+.. autoclass:: Autosampler
+	:members:

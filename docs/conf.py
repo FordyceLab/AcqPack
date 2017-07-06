@@ -32,9 +32,7 @@ project_root = os.path.dirname(cwd)
 sys.path.insert(0, project_root)
 
 from recommonmark.parser import CommonMarkParser
-source_parsers = {
-    '.md': CommonMarkParser,
-}
+source_parsers = {'.md': CommonMarkParser}
 
 import acqpack
 
