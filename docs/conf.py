@@ -37,6 +37,7 @@ source_parsers = {'.md': CommonMarkParser}
 import acqpack
 
 # -- General configuration ---------------------------------------------
+autodoc_member_order = 'bysource'
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #needs_sphinx = '1.0'
