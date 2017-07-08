@@ -1,6 +1,7 @@
 # AcqPack
-[![doc-status](https://readthedocs.org/projects/acqpack/badge/?version=latest)](http://acqpack.readthedocs.io/en/latest/?badge=latest)   
-[![linux-status](https://travis-ci.org/FordyceLab/AcqPack.svg?branch=master)](https://travis-ci.org/FordyceLab/AcqPack) Linux
+[![doc-status](https://readthedocs.org/projects/acqpack/badge/?version=latest)](http://acqpack.readthedocs.io/en/latest/?badge=latest) `Docs`   
+[![linux-status](https://travis-ci.org/FordyceLab/AcqPack.svg?branch=master)](https://travis-ci.org/FordyceLab/AcqPack) `Linux`   
+[![win-status](https://ci.appveyor.com/api/projects/status/FordyceLab/AcqPack?branch=master&svg=true)](https://ci.appveyor.com/api/projects/status/FordyceLab/AcqPack?branch=master&svg=true) `Windows`
 
 Code to perform acquisitions (experiment automation and hardware control).
 Should be combined with MMCorePy for microscope control.
