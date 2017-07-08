@@ -6,6 +6,8 @@
 import pytest
 
 from acqpack import Motor, AsiController, Autosampler, FractionCollector, Manifold
+from acqpack import utils as ut
+from acqpack import gui
 
 @pytest.fixture
 def response():

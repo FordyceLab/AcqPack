@@ -20,7 +20,8 @@ install_requirements = [
     'opencv-python',
     'opencv-contrib-python',
     'pymodbus',
-    'pyserial'
+    'pyserial',
+    'PyYAML',
 ]
 
 setup_requirements = [
