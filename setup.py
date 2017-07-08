@@ -40,7 +40,7 @@ setup(
     long_description=readme + '\n\n' + history,
     author="Scott Longwell",
     author_email='longwell@stanford.edu',
-    url='https://github.com/slongwell/acqpack',
+    url='https://github.com/fordycelab/acqpack',
     packages=find_packages(include=['acqpack']),
     include_package_data=True,
     install_requires=install_requirements,
