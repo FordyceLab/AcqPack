@@ -4,7 +4,7 @@
 
 __author__ = """Scott Longwell"""
 __email__ = 'longwell@stanford.edu'
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 import gui
 import utils
