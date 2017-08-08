@@ -1,7 +1,7 @@
 Welcome to acqpack's documentation!
 ======================================
 
-.. include:: ../README.md
+.. include:: installation.rst
 
 Contents:
 
