@@ -1,6 +1,8 @@
 Welcome to acqpack's documentation!
 ======================================
 
+.. include:: ../README.md
+
 Contents:
 
 .. toctree::
