@@ -37,7 +37,7 @@ test_requirements = [
 
 setup(
     name='acqpack',
-    version='0.8.0',
+    version='0.8.1',
     description="Library for instrument control and automated data acquisition",
     long_description=readme + '\n\n' + history,
     author="Scott Longwell",
