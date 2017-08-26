@@ -13,6 +13,7 @@ with open('HISTORY.rst') as history_file:
 
 install_requirements = [
     # TODO: put package requirements here
+    'jupyter',
     'numpy',
     'pandas',
     'matplotlib',
