@@ -12,12 +12,12 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 install_requirements = [
-    # TODO: put package requirements here
+    # put package requirements here
     'jupyter',
+    'ipywidgets',
     'numpy',
     'pandas',
     'matplotlib',
-    'ipywidgets',
     'opencv-python',
     'opencv-contrib-python',
     'pymodbus',
@@ -27,12 +27,12 @@ install_requirements = [
 
 setup_requirements = [
     'pytest-runner',
-    # TODO(slongwell): put setup requirements (distutils extensions, etc.) here
+    # put setup requirements (distutils extensions, etc.) here
 ]
 
 test_requirements = [
     'pytest',
-    # TODO: put package test requirements here
+    # put package test requirements here
 ]
 
 setup(
