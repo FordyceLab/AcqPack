@@ -50,7 +50,7 @@ class Motor:
         full_string = self.config['prefix'] + cmd_string + self.config['terminator']
         self.serial.write(full_string)
 
-        time.sleep(0.15)  # TODO: monitor for response?
+        time.sleep(0.1)  # TODO: monitor for response?
         response = self.serial.read(self.serial.inWaiting()).decode('utf8', 'ignore')
 
         while block and self.is_busy():
@@ -133,25 +133,9 @@ class Motor:
         :param mm: (float) desired relative movement [mm]
         :return: (str) device response
         """
-        ustep = int(self.config['conv'] * mm)  # number of ustep to move
-        ustep_current = int(self.config['conv'] * self.where())  # current location in ustep
-
-        if mm >= 0:
-            if (ustep_current + ustep) > self.config['ustep_max']:
-                ustep = self.config['ustep_max'] - ustep_current
-                print 'ERR: Desired move of +{} mm will exceed max of {} mm; moving to max instead'.format(mm, self.config[
-                    'ustep_max'] / self.config['conv'])
-            cmd_string = 'P{}R'.format(ustep)
-
-        else:
-            if (ustep_current + ustep) < self.config['ustep_min']:
-                ustep = self.config['ustep_min'] - ustep_current
-                print 'ERR: Desired move of {} mm will exceed max of {} mm; moving to min instead'.format(mm, self.config[
-                    'ustep_min'] / self.config['conv'])
-            ustep = -1 * ustep
-            cmd_string = 'D{}R'.format(ustep)
-
-        return self.cmd(cmd_string)
+        mm_current = self.where()[0]
+        
+        return self.goto(mm_current + mm)
 
     def where(self):
         """
