@@ -133,20 +133,20 @@ class Motor:
         :param mm: (float) desired relative movement [mm]
         :return: (str) device response
         """
-        ustep = int(self.config['conv'] * mm)
-        ustep_current = int(self.config['ustep_max'] / 2)  # TODO: limit movement (+ and -)
+        ustep = int(self.config['conv'] * mm)  # number of ustep to move
+        ustep_current = int(self.config['conv'] * self.where())  # current location in ustep
 
         if mm >= 0:
             if (ustep_current + ustep) > self.config['ustep_max']:
                 ustep = self.config['ustep_max'] - ustep_current
-                print 'ERR: Desired move of +{} mm exceeds max of {} mm; moving to max instead'.format(mm, self.config[
+                print 'ERR: Desired move of +{} mm will exceed max of {} mm; moving to max instead'.format(mm, self.config[
                     'ustep_max'] / self.config['conv'])
             cmd_string = 'P{}R'.format(ustep)
 
         else:
             if (ustep_current + ustep) < self.config['ustep_min']:
                 ustep = self.config['ustep_min'] - ustep_current
-                print 'ERR: Desired move of {} mm exceeds min of {} mm; moving to min instead'.format(mm, self.config[
+                print 'ERR: Desired move of {} mm will exceed max of {} mm; moving to min instead'.format(mm, self.config[
                     'ustep_min'] / self.config['conv'])
             ustep = -1 * ustep
             cmd_string = 'D{}R'.format(ustep)
