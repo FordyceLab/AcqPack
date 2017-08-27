@@ -20,6 +20,7 @@ install_requirements = [
     'matplotlib',
     'opencv-python',
     'opencv-contrib-python',
+    'pillow',
     'pymodbus',
     'pyserial',
     'PyYAML',
