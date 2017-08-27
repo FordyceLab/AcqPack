@@ -14,7 +14,7 @@ with open('HISTORY.rst') as history_file:
 install_requirements = [
     # put package requirements here
     'jupyter',
-    'ipywidgets',
+    'ipywidgets==6.0.0',
     'numpy',
     'pandas',
     'matplotlib',
