@@ -16,7 +16,7 @@ class AsiController:
     Functions for Z-axis control are defined, but it is not initialized. If it is desired to be used, then a homing
     procedure needs to be defined in initialize().
     """
-    def __init__(self, config_file, init=True):
+    def __init__(self, config_file, init_xy=True):
         self.serial = s.Serial()  # placeholder
         
         f = open(config_file, 'r')
@@ -24,29 +24,12 @@ class AsiController:
         f.close()
         
         self.config['conv'] = float(self.config['conv'])
-
-        if init:
-            self.initialize()
-
-    def initialize(self):
-        """
-        1) Open serial connection
-        2) Enable XY and Z motor control (one-time command)
-        3) Move to XY stage stops (hall-effect)
-        4) Move from switch limits 0.2 mm
-        5) Zero stage
-        """
         self.serial = s.Serial(**self.config['serial'])  # open serial connection
-
         self.cmd_xy('MC x+ y+')  # enable motor control for xy
         self.cmd_z('MC z+')      # enable motor control for z
 
-        print "Initializing stage..."
-        # TODO: should homing / initialization this be responsibility of the autosipper?
-        # TODO: Implement zeroing commands?
-        self.goto_xy(1000, -1000)  # move to switch limits (bottom right)
-        self.move_relative_xy(-0.2, 0.2)  # move from switch limits 0.2 mm
-        self.cmd_xy('HERE x y')  # establish current XY position as 0,0 (zero)
+        if init_xy:
+            self.zero_xy(**self.config['init_dir'])
 
     def cmd(self, cmd_string):
         """
@@ -116,9 +99,28 @@ class AsiController:
         """
         self.cmd_xy('HALT', False)
 
+    def zero_xy(self, x_dir=1, y_dir=1):
+        """
+        Sets the origin (zeros) at current location. If 'x_dir' and 'y_dir' are specified, will seek hardware limit
+        (hall-effect stops) before zeroing. 'x_dir' and 'y_dir' represent whether to max (+1) or min (-1) each axis.
+
+        :param x_dir: (int) -1 to min, +1 to max
+        :param y_dir: (int) -1 to min, +1 to max
+        :return: (str) device response
+        """
+        if (x_dir is not None) and (y_dir is not None):
+            assert(abs(x_dir)==1 and abs(y_dir)==1)
+            OVERLOAD = 1000.0
+            OFFSET = 0.2
+            print "Seeking limits x:{} y:{}".format(x_dir, y_dir)
+            self.goto_xy(x_dir*OVERLOAD, y_dir*OVERLOAD)  # move to hall-effect limits
+            self.move_relative_xy(-x_dir*OFFSET, -y_dir*OFFSET)  # nudge off switch limits
+
+        return self.cmd_xy('HERE x y') # establish current XY position as 0,0 (zero)
+
     def home_xy(self):
         """
-        Moves XY-axes to 0,0.
+        Moves XY-axes to origin (0,0)
         """
         return self.goto_xy(0, 0)
     

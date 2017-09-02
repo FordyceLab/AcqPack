@@ -1,10 +1,8 @@
 import time
-
 import serial as s
 import yaml
 
 
-# TODO: get current position for relative move
 class Motor:
     """
     Low-level wrapper for the Lin Engineering (LE) CO-4118S-09.
@@ -13,7 +11,7 @@ class Motor:
     The LE CO-4118S-09 has an integrated controller with a documented serial command-set. It lacks an encoder, and so
     relies on dead-reckoning for position. It does have an optical sensor that allows it to get a positional fix (home).
     """
-    def __init__(self, config_file, init=True):
+    def __init__(self, config_file, home=True):
         self.serial = s.Serial()  # placeholder
 
         f = open(config_file, 'r')
@@ -22,21 +20,13 @@ class Motor:
 
         self.config['conv'] = float(self.config['conv'])
 
-        if init:
-            self.initialize()
-
-    def initialize(self):
-        """
-        1) Open serial connection
-        2) Set velocity to velocity specified in config file
-        3) Home the motor
-        """
         self.serial = s.Serial(**self.config['serial'])  # open serial connection
-
+        self.set_velocity(self.config['velocity_limit'])  # set velocity
         # TODO set moving current
         # TODO set holding current
-        self.set_velocity(self.config['velocity_limit'])  # set velocity
-        self.home()  # move motor to home
+
+        if home:
+            self.home()
 
     def cmd(self, cmd_string, block=True):
         """

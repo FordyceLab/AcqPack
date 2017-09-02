@@ -245,6 +245,7 @@ def stage_control(stage):
         x_minus = widgets.Button(
             ax='x',
             sign=-1,
+            description='-x',
             button_style='primary',
             icon='fa-arrow-left',
             width='50px')
@@ -252,6 +253,7 @@ def stage_control(stage):
         x_plus = widgets.Button(
             ax='x',
             sign=1,
+            description='+x',
             button_style='primary',
             icon='fa-arrow-right',
             width='50px')
@@ -259,6 +261,7 @@ def stage_control(stage):
         y_minus = widgets.Button(
             ax='y',
             sign=-1,
+            description='-y',
             button_style='primary',
             icon='fa-arrow-up',
             width='50px')
@@ -266,6 +269,7 @@ def stage_control(stage):
         y_plus = widgets.Button(
             ax='y',
             sign=1,
+            description='+y',
             button_style='primary',
             icon='fa-arrow-down',
             width='50px')
@@ -309,12 +313,14 @@ def stage_control(stage):
         z_minus = widgets.Button(
             ax='z',
             sign=-1,
+            description='-z',
             button_style='primary',
             icon='fa-arrow-up')
 
         z_plus = widgets.Button(
             ax='z',
             sign=1,
+            description='+z',
             button_style='primary',
             icon='fa-arrow-down')
 
@@ -351,7 +357,10 @@ def stage_control(stage):
         where = tuple()
         for w in where_functions:
             where += w()
-        print(where)
+        where += (1,)  # add 'w' before affine
+        for name, frame in stage.frames.iteritems():
+            coords = tuple(np.dot(where, np.linalg.inv(frame.trans)))
+            print '(' + ', '.join(format(p, '.3f') for p in coords[:-1]) + ')', name
 
     def move(b):
         if b.ax == 'x':
@@ -393,7 +402,6 @@ def stage_control(stage):
 
     for field in pos_fields:
         field.on_submit(pos)
-    
 
     line = widgets.Label(value="$---------------------------------------$")
     print_pos()

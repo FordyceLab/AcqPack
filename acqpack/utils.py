@@ -71,16 +71,22 @@ def lookup(table, lookup_cols, lookup_vals, output_cols=None, output_recs=None):
     return output
 
 
-def generate_position_table(num_rc, space_rc, z, to_clipboard=False):
+def generate_position_table(num_rc, space_rc, offset=(0.0,0.0,0.0), to_clipboard=False):
     """
-    Generates a position table.
+    Generates a position table for a plate. Assumes that 'x' and 'c' are aligned and that
+    'y' and 'r' are aligned. These axes can be reflected by negating the corresponding 'space_rc'; 
+    translations can be applied via 'offset'. All entries are indexed by 'n' (newspaper order) 
+    and 's' (serpentine order). Other columns may be added as needed, but Autosampler.goto() 
+    requires 'x', 'y', and 'z' to function properly.
 
     :param num_rc: (tup) number of rows and columns (num_rows, num_cols)
     :param space_rc: (tup) spacing for rows and columns [mm] (spacing_rows, spacing_cols)
-    :param z: (float) z value in table [mm]
+    :param offset: (tup) 3-tuple of floats to be added to x,y,z [mm]
     :param to_clipboard: (bool) whether to copy the position_table to the OS clipboard
     :return: (DataFrame)
     """
+    # TODO: instead of offset, full affine option? can use negative space rc to reflect,
+    # but can't remap x -> y
     temp = list()
     headers = ['n', 's', 'r', 'c', 'name', 'x', 'y', 'z']
 
@@ -89,9 +95,9 @@ def generate_position_table(num_rc, space_rc, z, to_clipboard=False):
             n = c + r * num_rc[1]
             s = ((r + 1) % 2) * (c + r * num_rc[1]) + (r % 2) * ((r + 1) * num_rc[1] - (c + 1))
             name = chr(64 + r + 1) + '{:02d}'.format(c + 1)
-            x = float(c * space_rc[1])
-            y = float(r * space_rc[0])
-            z = float(z)
+            x = float(c * space_rc[1] + offset[0]) 
+            y = float(r * space_rc[0] + offset[1])
+            z = float(offset[2])
             temp.append([n, s, r, c, name, x, y, z])
     position_table = pd.DataFrame(temp, columns=headers)
     if to_clipboard:
