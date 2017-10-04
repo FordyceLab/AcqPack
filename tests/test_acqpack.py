@@ -5,7 +5,7 @@
 
 import pytest
 
-from acqpack import Motor, AsiController, Autosampler, FractionCollector, Manifold
+from acqpack import Motor, AsiController, Autosampler, FractionCollector, Manifold, Mfcs
 from acqpack import utils as ut
 from acqpack import gui
 
