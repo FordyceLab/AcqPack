@@ -1,0 +1,192 @@
+{
+   "VERSION": 3,
+   "ID": "Micro-Manager XY-position list",
+   "POSITIONS": [
+      {
+         "GRID_COL": 0,
+         "DEVICES": [
+            {
+               "DEVICE": "ZStage",
+               "AXES": 1,
+               "Y": 0,
+               "X": 22225.029687500002,
+               "Z": 0
+            },
+            {
+               "DEVICE": "XY",
+               "AXES": 2,
+               "Y": -0,
+               "X": -0,
+               "Z": 0
+            },
+            {
+               "DEVICE": "XYStage",
+               "AXES": 2,
+               "Y": 5450.95,
+               "X": -17707.19,
+               "Z": 0
+            }
+         ],
+         "PROPERTIES": {},
+         "DEFAULT_Z_STAGE": "ZStage",
+         "LABEL": "wasteANDdrops",
+         "GRID_ROW": 0,
+         "DEFAULT_XY_STAGE": "XYStage"
+      },
+      {
+         "GRID_COL": 0,
+         "DEVICES": [
+            {
+               "DEVICE": "ZStage",
+               "AXES": 1,
+               "Y": 0,
+               "X": 22224.909375000003,
+               "Z": 0
+            },
+            {
+               "DEVICE": "XY",
+               "AXES": 2,
+               "Y": -0,
+               "X": -0,
+               "Z": 0
+            },
+            {
+               "DEVICE": "XYStage",
+               "AXES": 2,
+               "Y": 4250.53,
+               "X": -18707.15,
+               "Z": 0
+            }
+         ],
+         "PROPERTIES": {},
+         "DEFAULT_Z_STAGE": "ZStage",
+         "LABEL": "T-junction",
+         "GRID_ROW": 0,
+         "DEFAULT_XY_STAGE": "XYStage"
+      },
+      {
+         "GRID_COL": 0,
+         "DEVICES": [
+            {
+               "DEVICE": "ZStage",
+               "AXES": 1,
+               "Y": 0,
+               "X": 22224.909375000003,
+               "Z": 0
+            },
+            {
+               "DEVICE": "XY",
+               "AXES": 2,
+               "Y": -0,
+               "X": -0,
+               "Z": 0
+            },
+            {
+               "DEVICE": "XYStage",
+               "AXES": 2,
+               "Y": 3950.96,
+               "X": -2908.08,
+               "Z": 0
+            }
+         ],
+         "PROPERTIES": {},
+         "DEFAULT_Z_STAGE": "ZStage",
+         "LABEL": "expansion",
+         "GRID_ROW": 0,
+         "DEFAULT_XY_STAGE": "XYStage"
+      },
+      {
+         "GRID_COL": 0,
+         "DEVICES": [
+            {
+               "DEVICE": "ZStage",
+               "AXES": 1,
+               "Y": 0,
+               "X": 22224.909375000003,
+               "Z": 0
+            },
+            {
+               "DEVICE": "XY",
+               "AXES": 2,
+               "Y": -0,
+               "X": -0,
+               "Z": 0
+            },
+            {
+               "DEVICE": "XYStage",
+               "AXES": 2,
+               "Y": 3950.96,
+               "X": 2991.44,
+               "Z": 0
+            }
+         ],
+         "PROPERTIES": {},
+         "DEFAULT_Z_STAGE": "ZStage",
+         "LABEL": "outlet",
+         "GRID_ROW": 0,
+         "DEFAULT_XY_STAGE": "XYStage"
+      },
+      {
+         "GRID_COL": 0,
+         "DEVICES": [
+            {
+               "DEVICE": "ZStage",
+               "AXES": 1,
+               "Y": 0,
+               "X": 22224.909375000003,
+               "Z": 0
+            },
+            {
+               "DEVICE": "XY",
+               "AXES": 2,
+               "Y": -0,
+               "X": -0,
+               "Z": 0
+            },
+            {
+               "DEVICE": "XYStage",
+               "AXES": 2,
+               "Y": 14950.92,
+               "X": 990.35,
+               "Z": 0
+            }
+         ],
+         "PROPERTIES": {},
+         "DEFAULT_Z_STAGE": "ZStage",
+         "LABEL": "inlet",
+         "GRID_ROW": 0,
+         "DEFAULT_XY_STAGE": "XYStage"
+      },
+      {
+         "GRID_COL": 0,
+         "DEVICES": [
+            {
+               "DEVICE": "ZStage",
+               "AXES": 1,
+               "Y": 0,
+               "X": 22225.0796875,
+               "Z": 0
+            },
+            {
+               "DEVICE": "XY",
+               "AXES": 2,
+               "Y": -0,
+               "X": -0,
+               "Z": 0
+            },
+            {
+               "DEVICE": "XYStage",
+               "AXES": 2,
+               "Y": 1750.8400000000001,
+               "X": -16008.5,
+               "Z": 0
+            }
+         ],
+         "PROPERTIES": {},
+         "DEFAULT_Z_STAGE": "ZStage",
+         "LABEL": "oil",
+         "GRID_ROW": 0,
+         "DEFAULT_XY_STAGE": "XYStage"
+      }
+   ]
+}
