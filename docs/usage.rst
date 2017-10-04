@@ -30,6 +30,16 @@ Classes
     :undoc-members:
     :show-inheritance:
 
+.. autoclass:: acqpack.Manifold
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. autoclass:: acqpack.Mfcs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Modules
 =======
