@@ -1,9 +1,13 @@
 import utils as ut
 
+import os
 import time
 import yaml
 from ctypes import *
 
+
+DLL_FILENAME = 'mfcs_64.dll'  # dll packaged with acqpack (todo: 'package resources')
+DLL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), DLL_FILENAME)
 # TODO: 
 # - config file vs chanmap_path
 # - which device
@@ -13,11 +17,12 @@ class Mfcs:
     Class to control the MFCS-EZ.
     """
     def __init__(self, config_file, chanmap_path):
+        
         with open(config_file) as file:
             self.config = yaml.load(file)
         
         self.config['conversion_to_mbar'] = float(self.config['conversion_to_mbar'])  # ensure conversion factor is float
-        self.dll = cdll.LoadLibrary(self.config['dll_path'])  # load dll (i.e. MFCS API)
+        self.dll = cdll.LoadLibrary(DLL_PATH)  # load dll (i.e. MFCS API)
         self.c_status = c_char()  # placeholder for status
         self.c_serial = c_ushort(0)  # placeholder for serial number
         
@@ -53,6 +58,8 @@ class Mfcs:
         else:
             print('MFCS initialized. SN: {}'.format(self.c_serial.value))
             self.pid(0, self.config['alpha_default'])
+            print('PID alpha: {}'.format(self.config['alpha_default']))
+            print('Pressure units: {}'.format(self.config['pressure_unit']))
             
             s, status = self.status()
             time.sleep(0.1)
