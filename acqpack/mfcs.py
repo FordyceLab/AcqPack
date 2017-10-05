@@ -1,11 +1,8 @@
-from acqpack import utils as ut
+import utils as ut
 
 import time
 import yaml
 from ctypes import *
-
-DLL_PATH = 'mfcs_64.dll'
-ALPHA_DEFAULT = 1
 
 # TODO: 
 # - config file vs chanmap_path
@@ -20,11 +17,11 @@ class Mfcs:
             self.config = yaml.load(file)
         
         self.config['conversion_to_mbar'] = float(self.config['conversion_to_mbar'])  # ensure conversion factor is float
-        self.dll = cdll.LoadLibrary(DLL_PATH)  # load dll (i.e. MFCS API)
+        self.dll = cdll.LoadLibrary(self.config['dll_path'])  # load dll (i.e. MFCS API)
         self.c_status = c_char()  # placeholder for status
         self.c_serial = c_ushort(0)  # placeholder for serial number
         
-        self.detect()
+        # self.detect()
         self.connect()
         self.load_chanmap(chanmap_path)
 
@@ -55,7 +52,7 @@ class Mfcs:
             self.exit()
         else:
             print('MFCS initialized. SN: {}'.format(self.c_serial.value))
-            self.pid(0, ALPHA_DEFAULT)
+            self.pid(0, self.config['alpha_default'])
             
             s, status = self.status()
             time.sleep(0.1)
