@@ -1,6 +1,3 @@
-Welcome to acqpack's documentation!
-======================================
-
 .. include:: ../README.rst
 
 Contents:
