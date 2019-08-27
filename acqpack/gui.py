@@ -27,18 +27,19 @@ def snap(core, mode='mpl'):
     def on_snap_mpl(b):
         core.snapImage()
         img = core.getImage()
-        plt.imshow(img, cmap='gray')
+        plt.imshow(img, cmap='gray', vmin=0, vmax=2**core.getImageBitDepth()-1)
         plt.show()
 
     def on_snap_cv2(b):
         cv2.destroyWindow('Snap')
         cv2.namedWindow('Snap', cv2.WINDOW_NORMAL)
-        cv2.resizeWindow('Snap', 500, 500)
+        cv2.resizeWindow('Snap', core.getImageWidth()*500/core.getImageHeight(), 500)
         cv2.setWindowProperty('Snap', cv2.WND_PROP_ASPECT_RATIO, cv2.WINDOW_KEEPRATIO)
         core.snapImage()
         time.sleep(.1)
         img = core.getImage()
-        cv2.imshow('Snap', img)
+        img8 = (img.astype(float)/(2**core.getImageBitDepth()-1) * 255).astype(np.uint8)
+        cv2.imshow('Snap', img8)
         k = cv2.waitKey(30)
 
     def on_close_cv2(b):
@@ -71,14 +72,15 @@ def video(core, loop_pause=0.15):
         time.sleep(.2)
         cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
         cv2.setWindowProperty('Video', cv2.WND_PROP_ASPECT_RATIO, cv2.WINDOW_KEEPRATIO)
-        cv2.resizeWindow('Video', 500, 500)
-        img = np.zeros((500, 500))
+        cv2.resizeWindow('Video', core.getImageWidth()*500/core.getImageHeight(), 500)
+        img = np.zeros((core.getImageWidth()*500/core.getImageHeight(), 500))
         print 'To stop, click window + press ESC'
         while 1:
             time.sleep(loop_pause)
             if core.getRemainingImageCount() > 0:
                 img = core.getLastImage()
-            cv2.imshow('Video', img)
+                img8 = (img.astype(float)/(2**core.getImageBitDepth()-1) * 255).astype(np.uint8)
+            cv2.imshow('Video', img8)
             k = cv2.waitKey(30)
             if k == 27:  # ESC key; may need 255 mask?
                 break
@@ -224,7 +226,7 @@ def manifold_control(manifold, button_col='name'):
     sync_button = widgets.Button(icon='fa-retweet', button_style='success', layout=widgets.Layout(width='40px'))
     sync_button.on_click(sync)
     display.display(widgets.HBox(bank_list + [sync_button]))
-    display.display(widgets.Label('Dark = De-Pressurized / Open', layout=widgets.Layout(width='300px')))
+    display.display(widgets.Label('DARK:  De-Pressurized, Open', layout=widgets.Layout(width='300px')), widgets.Label('LIGHT: Pressurized,    Closed', layout=widgets.Layout(width='300px')))
 
     
 # --------------------------------------------------------------------

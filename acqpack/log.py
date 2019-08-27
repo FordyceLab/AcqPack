@@ -105,6 +105,3 @@ class Log():
             for name, f in inspect.getmembers(cls):
                 if isinstance(f, types.UnboundMethodType):
                     setattr(cls, name, self.track_fn(f))
-        
-l = Log()
-l.show()
