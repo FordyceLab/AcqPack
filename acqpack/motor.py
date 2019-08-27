@@ -15,7 +15,7 @@ class Motor:
         self.serial = s.Serial()  # placeholder
 
         f = open(config_file, 'r')
-        self.config = yaml.load(f)
+        self.config = yaml.full_load(f)
         f.close()
 
         self.config['conv'] = float(self.config['conv'])

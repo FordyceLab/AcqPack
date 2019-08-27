@@ -5,8 +5,18 @@ import types
 import time
 
 # TODO:
+# - continously updating display with new events (flag?)
+# - conditional formatting (pandas styler)
+# - plotting
 # - use python built-in logging backend (cross-notebook)?
+# - logging/inspection from Jupyter? reproducable Juyter plugin?
 # - fix signature of wrapper [e.g. f.goto(lookup, blah,...)]
+# - keyword args
+# - bug where __init__ time logging doesn't work properly
+# - how to handle re-running cells/etc
+# - single .track() function
+# - config .show() to hide fields
+# - 'cls' usage problem: https://stackoverflow.com/questions/4613000/what-is-the-cls-variable-used-for-in-python-classes
 class Log():
     """
     Creates a pandas df for logging function calls.
@@ -53,7 +63,7 @@ class Log():
         
     """
     def __init__(self):
-        self.df = pd.DataFrame(columns=['t_in', 'ts_in', 't_out', 'ts_out',
+        self.df = pd.DataFrame(columns=['t_in', 'ts_in', 't_out', 'ts_out', 'dt',
                                         'class', 'fn', 'in', 'out'])
         self.write = self.track_fn(self.write)
         self.write('init')
@@ -63,14 +73,17 @@ class Log():
         return time.strftime("%Y%m%d_%H:%M:%S", time.localtime(time_s))
     
     
-    def show(self, ascending=False, clear_display=False):
+    def show(self, ascending=True, clear_display=False):
+        ret = (self.df[['ts_in', 'ts_out', 'dt',
+                       'class', 'fn', 'in', 'out']].sort_index(ascending=ascending)
+                       .style
+                       .set_properties(subset=['in','out'], **{'text-align': 'left'})
+                       .set_table_styles([dict(selector='th', props=[('text-align', 'left')] ) ]))
         if clear_display:
             disp.clear_output(wait=True)
-        disp.display(self.df[['ts_in', 'ts_out',
-                             'class', 'fn', 'in', 'out']].sort_index(ascending=ascending)
-                     .style
-                     .set_properties(subset=['in','out'], **{'text-align': 'left'})
-                     .set_table_styles([dict(selector='th', props=[('text-align', 'left')] ) ]))
+            disp.display(ret)
+        else:
+            return ret.data
     
     def write(self, msg):
         pass
@@ -90,11 +103,11 @@ class Log():
             fn = f.__name__
             i = len(self.df)
             
-            t = time.time()
-            self.df.loc[i, ['t_in','ts_in','class','fn','in']] = [t, self.format_time(t), cls, fn, inputs]
+            t_in = time.time()
+            self.df.loc[i, ['t_in','ts_in','class','fn','in']] = [t_in, self.format_time(t_in), cls, fn, inputs]
             outputs = f(*args)
-            t = time.time()
-            self.df.loc[i, ['t_out','ts_out','out']] = [t, self.format_time(t), outputs]
+            t_out = time.time()
+            self.df.loc[i, ['t_out','ts_out','dt','out']] = [t_out, self.format_time(t_out), t_out-t_in, outputs]
             
             return outputs 
         wrapper.__doc__ = f.__doc__

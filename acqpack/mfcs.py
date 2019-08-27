@@ -19,7 +19,7 @@ class Mfcs:
     def __init__(self, config_file, chanmap_path):
         
         with open(config_file) as file:
-            self.config = yaml.load(file)
+            self.config = yaml.full_load(file)
         
         self.config['conversion_to_mbar'] = float(self.config['conversion_to_mbar'])  # ensure conversion factor is float
         self.dll = cdll.LoadLibrary(DLL_PATH)  # load dll (i.e. MFCS API)
