@@ -8,6 +8,7 @@ __version__ = '1.1.1'
 
 import gui
 import utils
+from log import Log
 from asicontroller import AsiController
 from autosampler import Autosampler
 from fractioncollector import FractionCollector
