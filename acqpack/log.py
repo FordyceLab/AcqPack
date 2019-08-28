@@ -3,6 +3,7 @@ import IPython.display as disp
 import inspect
 import types
 import time
+import threading
 
 # TODO:
 # - continously updating display with new events (flag?)
@@ -15,7 +16,10 @@ import time
 # - bug where __init__ time logging doesn't work properly
 # - how to handle re-running cells/etc
 # - single .track() function
+# - simulation (on ordered scale, not necessarily time-based)
+# - log state interpreter
 # - config .show() to hide fields
+# - thread safety https://stackoverflow.com/questions/261683/what-is-meant-by-thread-safe-code
 # - 'cls' usage problem: https://stackoverflow.com/questions/4613000/what-is-the-cls-variable-used-for-in-python-classes
 class Log():
     """
@@ -65,6 +69,7 @@ class Log():
     def __init__(self):
         self.df = pd.DataFrame(columns=['t_in', 'ts_in', 't_out', 'ts_out', 'dt',
                                         'class', 'fn', 'in', 'out'])
+        self._lock = threading.Lock()
         self.write = self.track_fn(self.write)
         self.write('init')
     
@@ -73,12 +78,13 @@ class Log():
         return time.strftime("%Y%m%d_%H:%M:%S", time.localtime(time_s))
     
     
-    def show(self, ascending=True, clear_display=False):
+    def show(self, ascending=True, clear_display=True):
         ret = (self.df[['ts_in', 'ts_out', 'dt',
                        'class', 'fn', 'in', 'out']].sort_index(ascending=ascending)
                        .style
-                       .set_properties(subset=['in','out'], **{'text-align': 'left'})
-                       .set_table_styles([dict(selector='th', props=[('text-align', 'left')] ) ]))
+                       .set_properties(**{'text-align': 'left'})
+                       .set_table_styles([dict(selector='th', props=[('text-align', 'left')] ) ])
+                       .format({'dt': "{:.3f}"}))
         if clear_display:
             disp.clear_output(wait=True)
             disp.display(ret)
@@ -101,10 +107,11 @@ class Log():
                 inputs = args
             #obj = str(args[0])[str(args[0]).find('at ')+3:-1]
             fn = f.__name__
-            i = len(self.df)
             
-            t_in = time.time()
-            self.df.loc[i, ['t_in','ts_in','class','fn','in']] = [t_in, self.format_time(t_in), cls, fn, inputs]
+            with self._lock:
+                i = len(self.df)
+                t_in = time.time()
+                self.df.loc[i, ['t_in','ts_in','class','fn','in']] = [t_in, self.format_time(t_in), cls, fn, inputs]
             outputs = f(*args)
             t_out = time.time()
             self.df.loc[i, ['t_out','ts_out','dt','out']] = [t_out, self.format_time(t_out), t_out-t_in, outputs]
