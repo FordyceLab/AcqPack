@@ -355,7 +355,7 @@ def stage_control(stage):
 
     # functions ------------------------------------------------------------
     def print_pos():
-        display.clear_output()
+        display.clear_output(wait=True)
         where = tuple()
         for w in where_functions:
             where += w()

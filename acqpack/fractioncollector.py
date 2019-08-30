@@ -23,7 +23,7 @@ class FractionCollector:
         :param position_table: (None | pd.DataFrame <- str) position_table; if string, tries to load delimited file
         """
         if isinstance(trans, str):
-            trans = ut.read_delim_pd(trans).select_dtypes(['number']).as_matrix()
+            trans = ut.read_delim_pd(trans).select_dtypes(['number']).values
         if isinstance(position_table, str):
             position_table = ut.read_delim_pd(position_table)
 

@@ -18,6 +18,7 @@ import threading
 # - single .track() function
 # - simulation (on ordered scale, not necessarily time-based)
 # - log state interpreter
+# - get_state(log) 
 # - config .show() to hide fields
 # - thread safety https://stackoverflow.com/questions/261683/what-is-meant-by-thread-safe-code
 # - 'cls' usage problem: https://stackoverflow.com/questions/4613000/what-is-the-cls-variable-used-for-in-python-classes

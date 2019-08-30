@@ -14,6 +14,7 @@ class Autosampler:
         self.frames = pd.DataFrame(index=['trans', 'position_table'])
         self.add_frame('hardware')
     
+        self.zh_travel = 0
         self.Z = z  # must be initialized first!!! (avoid collisions)
         self.XY = xy
 
@@ -26,7 +27,7 @@ class Autosampler:
         :param position_table: (None | pd.DataFrame <- str) position_table; if string, tries to load delimited file
         """
         if isinstance(trans, str):
-            trans = ut.read_delim_pd(trans).select_dtypes(['number']).as_matrix()
+            trans = ut.read_delim_pd(trans).select_dtypes(['number']).values
         if isinstance(position_table, str):
             position_table = ut.read_delim_pd(position_table)
 
@@ -118,8 +119,10 @@ class Autosampler:
             xyzw = xyz + (1,)  # concatenate for translation
             xh, yh, zh, _ = np.dot(xyzw, trans)  # get hardware coordinates
 
-        if zh_travel:
+        if zh_travel>0:
             self.Z.goto(zh_travel)
+        elif self.zh_travel>0:
+            self.Z.goto(self.zh_travel)
         else:
             self.Z.home()
 
