@@ -26,7 +26,7 @@ class Log():
     """
     Creates a pandas df for logging function calls.
     The columns of the df are:
-    't_in','ts_in','t_out','ts_out','class','fn','in','out'
+    't_in','ts_in','t_out','ts_out','cl','fn','fn_in','fn_out'
     
     Provides functions for replacing:
      a) functions [.track_fn(f)]
@@ -68,8 +68,9 @@ class Log():
         
     """
     def __init__(self):
-        self.df = pd.DataFrame(columns=['t_in', 'ts_in', 't_out', 'ts_out', 'dt',
-                                        'class', 'fn', 'in', 'out'])
+        self.df = pd.DataFrame(columns=['t_in', 'ts_in', 't_out', 'ts_out', 'dt', 'th',
+                                        'cl', 'fn', 'fn_in', 'fn_out'])
+        self.show_filter = 'index' # permissive filter
         self._lock = threading.Lock()
         self.write = self.track_fn(self.write)
         self.write('init')
@@ -79,9 +80,14 @@ class Log():
         return time.strftime("%Y%m%d_%H:%M:%S", time.localtime(time_s))
     
     
-    def show(self, ascending=True, clear_display=True):
-        ret = (self.df[['ts_in', 'ts_out', 'dt',
-                       'class', 'fn', 'in', 'out']].sort_index(ascending=ascending)
+    def show(self, query='', ascending=True, clear_display=True):
+        if query=='':
+            query = self.show_filter
+
+        ret = (self.df[['ts_in', 'ts_out', 'dt', 'th',
+                       'cl', 'fn', 'fn_in', 'fn_out']]
+                       .query(query)
+                       .sort_index(ascending=ascending)
                        .style
                        .set_properties(**{'text-align': 'left'})
                        .set_table_styles([dict(selector='th', props=[('text-align', 'left')] ) ])
@@ -98,13 +104,13 @@ class Log():
     def track_fn(self, f):
         def wrapper(*args):
             if f.__class__.__name__ == 'instancemethod':
-                cls = f.im_class.__name__
-                if cls!='Log':
+                cl = f.im_class.__name__
+                if cl!='Log':
                     inputs = args[1:]
                 else:
                     inputs = args
             else:
-                cls = ''
+                cl = ''
                 inputs = args
             #obj = str(args[0])[str(args[0]).find('at ')+3:-1]
             fn = f.__name__
@@ -112,17 +118,21 @@ class Log():
             with self._lock:
                 i = len(self.df)
                 t_in = time.time()
-                self.df.loc[i, ['t_in','ts_in','class','fn','in']] = [t_in, self.format_time(t_in), cls, fn, inputs]
+                th = threading.currentThread().getName()
+                # print 'in', fn, threading.active_count()
+                self.df.loc[i, ['t_in','ts_in','th','cl','fn','fn_in']] = [t_in, self.format_time(t_in), th, cl, fn, inputs]
             outputs = f(*args)
-            t_out = time.time()
-            self.df.loc[i, ['t_out','ts_out','dt','out']] = [t_out, self.format_time(t_out), t_out-t_in, outputs]
+            with self._lock:
+                t_out = time.time()
+                self.df.loc[i, ['t_out','ts_out','dt','fn_out']] = [t_out, self.format_time(t_out), t_out-t_in, outputs]
+                # print 'out', fn, threading.active_count()
             
             return outputs 
         wrapper.__doc__ = f.__doc__
         return wrapper
     
     def track_classes(self, classes):
-        for cls in classes:
-            for name, f in inspect.getmembers(cls):
+        for cl in classes:
+            for name, f in inspect.getmembers(cl):
                 if isinstance(f, types.UnboundMethodType):
-                    setattr(cls, name, self.track_fn(f))
+                    setattr(cl, name, self.track_fn(f))
