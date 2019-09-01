@@ -190,7 +190,7 @@ def grid(core, loop_pause=0.15):
 
 # --------------------------------------------------------------------
 # MANIFOLD -----------------------------------------------------------
-def manifold_control(manifold, button_col='name'):
+def manifold_control(manifold, button_col='name', trim_to_valvemap=True):
     def on_clicked(b):
         if b.new == True:  # keep this (b.new == True)
             manifold.depressurize(b.owner.valve)
@@ -202,9 +202,22 @@ def manifold_control(manifold, button_col='name'):
     def sync(b):
         for button in button_list:
             button.value = manifold.read_valve(button.valve)
+    
+    min_bank = 0
+    max_bank = 5
+    if trim_to_valvemap:
+        min_bank = (manifold.valvemap[button_col]
+                    .replace(r'^\s*$', np.nan, regex=True)
+                    .dropna()
+                    .index.min()//8)
+        max_bank = (manifold.valvemap[button_col]
+                    .replace(r'^\s*$', np.nan, regex=True)
+                    .dropna()
+                    .index.max()//8)
+
 
     button_list = []
-    for i in range(48):
+    for i in range(min_bank, 8*(max_bank+1)):
         desc = '{} . . . {}'.format(i, manifold.valvemap[button_col][i])
         button_list.append(
             widgets.ToggleButton(
@@ -218,7 +231,7 @@ def manifold_control(manifold, button_col='name'):
         button.observe(on_clicked)
 
     bank_list = []
-    for i in range(0, 48, 8):
+    for i in range(min_bank, 8*(max_bank+1), 8):
         bank_list.append(
             widgets.VBox(button_list[i:i + 8][::-1])
         )
