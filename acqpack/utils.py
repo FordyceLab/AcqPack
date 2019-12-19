@@ -119,20 +119,26 @@ def load_mm_positionlist(filepath):
     """
     with open(filepath) as f:
         data = json.load(f)
+        
+    df_rcn = pd.io.json.json_normalize(data, ['POSITIONS'])[['GRID_ROW', 'GRID_COL', 'LABEL']]
+    df_pos = pd.io.json.json_normalize(data, ['POSITIONS', 'DEVICES'])[['DEVICE', 'X', 'Y']]
 
-    df1 = pd.io.json.json_normalize(data, ['POSITIONS']).drop(
-        ['DEFAULT_XY_STAGE', 'DEFAULT_Z_STAGE', 'DEVICES', 'PROPERTIES'], 1)
-    df1 = df1[['GRID_ROW', 'GRID_COL', 'LABEL']]
-    df2 = pd.io.json.json_normalize(data, ['POSITIONS', 'DEVICES']).drop(['DEVICE', 'AXES', 'Z'], 1)
-    df = pd.concat([df1, df2], axis=1)
+    df_xy = df_pos.query("DEVICE=='XYStage'")[['X','Y']].reset_index(drop=True)
+    df = pd.concat([df_rcn,df_xy], axis=1)
+
+    # check for z-axis
+    ds_z = df_pos.query("DEVICE=='ZStage'")['X'].reset_index(drop=True)
+    if len(ds_z)>0:
+        df['z'] = ds_z
 
     rename = {'GRID_ROW': 'r',
               'GRID_COL': 'c',
               'LABEL': 'name',
               'X': 'x',
               'Y': 'y'}
+    df.rename(columns=rename, inplace=True)
 
-    return df.rename(columns=rename)
+    return df
 
 
 def generate_grid(c0, c1, l_img, p):
