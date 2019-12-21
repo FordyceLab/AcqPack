@@ -112,10 +112,11 @@ def spacing(num_rc, p1, p2):
 
 def load_mm_positionlist(filepath):
     """
-    Takes a MicroManager position list and converts it to a pandas DataFrame.
+    Takes a MicroManager position list and converts it to a pandas DataFrame. Will load z-coordinates if
+    available.
 
     :param filepath: (str)
-    :return: (DataFrame) position list with headers = "r, c, name, x, y"
+    :return: (DataFrame) position list with headers = "r, c, name, x, y, [z]"
     """
     with open(filepath) as f:
         data = json.load(f)
