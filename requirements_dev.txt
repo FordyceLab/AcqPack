@@ -11,7 +11,7 @@ pyserial==3.4
 PyYAML==4.2b1
 
 pip==9.0.1
-bumpversion==0.5.3
+bumpversion==0.6.0
 wheel==0.29.0
 watchdog==0.8.3
 pytest==3.2.1
