@@ -17,7 +17,7 @@ pytest==3.2.1
 pytest-runner==2.11.1
 tox==2.7.0
 flake8==3.4.1
-coverage==4.4.1
+coverage==7.2.6
 Sphinx==1.6.3
 sphinxcontrib-napoleon==0.6.1
 cryptography==2.6.1
